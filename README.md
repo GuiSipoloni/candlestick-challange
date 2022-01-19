@@ -1,3 +1,56 @@
+# Candlestick challenge
+
+To do this challenge I used the already developed code and implement the solution
+with a simple h2 memory Database with this, I could use SQL queries to fast
+deliver the solution for building a candlestick, and with the H2db I could test
+my query in unit tests. To apply this solution I have created a new attribute
+for `Quote`(created_at). With the `createdAt` I could group the date per minute and get
+all the information to build a candlestick.
+
+
+# Code Execution
+
+### Pre Requirements
+
+You need to install `docker` and `docker-compose`
+https://docs.docker.com/engine/install/ubuntu/
+
+### How to execute
+
+```shell
+docker-compose build
+docker-compose up
+```
+It'll start the producer .jar and the main application.
+
+The main application has an endpoint to get the candlesticks by the `isin`
+
+```
+http://localhost:9000/candlesticks?isin=CD0112G23618
+```
+and it'll return a JSON like this with the details of the candlestick
+```json
+[
+  {
+    "openTimestamp": [2022,1,19,3,13,52,55183000],
+    "closeTimestamp": [2022,1,19,3,13,57,237759000],
+    "openPrice": 1063.62,
+    "highPrice": 1077.83,
+    "lowPrice": 1036.24,
+    "closingPrice": 1036.24
+  }
+]
+```
+
+If you didn't send an `isin` the API will respond to a bad request with this body
+```
+{'reason': 'missing_isin'}
+```
+And if the `isin` was not found the API will respond to a not found with this body
+```
+{'reason': 'No Quotes found for this isin'}
+```
+
 # Trade Republic Coding Challenge
 
 Your task is to build a system that enables users to view price histories. 
@@ -192,56 +245,3 @@ The following questions will give you a hint on what to think about for the code
 
 - How would you change the system to provide scaling capabilities to 50.000 (or more) available instruments, each streaming quotes between once per second and every few seconds?
 - How could this system be build in a way that supports failover capabilities so that multiple instances of the system could run simultaneously?
-
-# Candlestick challenge
-
-To do this challenge I used the already developed code and implement the solution
-with a simple h2 memory Database with this, I could use SQL queries to fast
-deliver the solution for building a candlestick, and with the H2db I could test
-my query in unit tests. To apply this solution I have created a new attribute
-for `Quote`(created_at). With the `createdAt` I could group the date per minute and get
-all the information to build a candlestick.
-
-
-# Code Execution
-
-### Pre Requirements
-
-You need to install `docker` and `docker-compose`
-https://docs.docker.com/engine/install/ubuntu/
-
-### How to execute
-
-```shell
-docker-compose build
-docker-compose up
-```
-It'll start the producer .jar and the main application. 
-
-The main application has an endpoint to get the candlesticks by the `isin`
-
-```
-http://localhost:9000/candlesticks?isin=CD0112G23618
-```
-and it'll return a JSON like this with the details of the candlestick
-```json
-[
-  {
-    "openTimestamp": [2022,1,19,3,13,52,55183000],
-    "closeTimestamp": [2022,1,19,3,13,57,237759000],
-    "openPrice": 1063.62,
-    "highPrice": 1077.83,
-    "lowPrice": 1036.24,
-    "closingPrice": 1036.24
-  }
-]
-```
-
-If you didn't send an `isin` the API will respond to a bad request with this body  
-```json
-{'reason': 'missing_isin'}
-```
-And if the `isin` was not found the API will respond to a not found with this body
-```json
-{'reason': 'No Quotes found for this isin'}
-```
