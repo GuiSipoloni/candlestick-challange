@@ -1,0 +1,22 @@
+version: '3'
+services:
+  producer:
+    image: openjdk:11
+    volumes:
+    - ./:/app
+    command: bash -c "cd /app && java -jar partner-service-1.0.1-all.jar --port=8032"
+    ports:
+      - 8032:8032
+
+  candlestick:
+    build: .
+    volumes:
+    - ./:/app
+    ports:
+      - 9000:9000
+    expose:
+      - 8032
+    depends_on:
+      - producer
+    links:
+      - producer:producer
